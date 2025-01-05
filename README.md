@@ -1,0 +1,1 @@
+# nifty-coinbase-agent
