@@ -4,7 +4,7 @@ url = "http://127.0.0.1:5000/uppercase"
 
 # Define the payload with the text to convert to uppercase
 payload = {
-    "text": "can you request some funds from a faucet?"
+    "text": "Can you post a tweet that says Buy Bonk?"
 }
 
 # Set the headers to indicate the content type is JSON

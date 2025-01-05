@@ -90,6 +90,7 @@ def get_chat_response(message):
         elif "tools" in chunk:
             response = chunk["tools"]["messages"][0].content
         
+        print (response)
         if response != "":
             final_response += "\n" + response
     
