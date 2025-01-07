@@ -7,7 +7,7 @@ app = Flask(__name__)
 api = Api(app)
 swagger = Swagger(app)
 
-class UppercaseText(Resource):
+class NiftyCDPAgent(Resource):
 
     def post(self):
         """
@@ -45,7 +45,7 @@ class UppercaseText(Resource):
 
         return jsonify({"text": processed_text})
 
-api.add_resource(UppercaseText, "/uppercase")
+api.add_resource(NiftyCDPAgent, "/niftyagent")
 
 if __name__ == "__main__":
     start_agent()
