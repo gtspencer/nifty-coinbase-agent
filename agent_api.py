@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_restful import Api, Resource
 from flasgger import Swagger
-from agent_setup import get_chat_response, start_agent
+from chatbot import get_chat_response, start_agent
 
 app = Flask(__name__)
 api = Api(app)
@@ -11,7 +11,7 @@ class NiftyCDPAgent(Resource):
 
     def post(self):
         """
-        This method responds to the POST request for this endpoint and returns the data in uppercase.
+        This method responds to the POST request for this endpoint and returns the data the agent provides.
         ---
         tags:
         - Text Processing
@@ -24,7 +24,7 @@ class NiftyCDPAgent(Resource):
                 properties:
                   text:
                     type: string
-                    description: The text to be converted to uppercase
+                    description: The text is sent to the agent
                     example: "hello world"
         responses:
           200:
@@ -36,7 +36,7 @@ class NiftyCDPAgent(Resource):
                   properties:
                     text:
                       type: string
-                      description: The text in uppercase
+                      description: The response from the agent
         """
         data = request.get_json()
         text = data.get('text', '')
