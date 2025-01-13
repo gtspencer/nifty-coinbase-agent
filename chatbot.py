@@ -22,19 +22,15 @@ CDP_API_KEY_NAME = os.getenv('CDP_API_KEY_NAME')
 CDP_API_KEY_PRIVATE_KEY = os.getenv('CDP_API_KEY_PRIVATE_KEY')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 NETWORK_ID = os.getenv('NETWORK_ID')
-
+WALLET_INFO = os.getenv('WALLET_INFO')
 
 def initialize_agent():
     """Initialize the agent with CDP Agentkit."""
     # Initialize LLM.
     llm = ChatOpenAI(model="gpt-4o-mini")
 
-    wallet_data = None
-
-    if os.path.exists(wallet_data_file):
-        with open(wallet_data_file) as f:
-            wallet_data = f.read()
-
+    # load in wallet info from environment variables
+    wallet_data = WALLET_INFO
 
     # Configure CDP Agentkit Langchain Extension.
     values = {}
@@ -44,10 +40,11 @@ def initialize_agent():
 
     agentkit = CdpAgentkitWrapper(**values)
 
+    # disable writing of wallet file
     # persist the agent's CDP MPC Wallet Data.
-    wallet_data = agentkit.export_wallet()
-    with open(wallet_data_file, "w") as f:
-        f.write(wallet_data)
+    # wallet_data = agentkit.export_wallet()
+    # with open(wallet_data_file, "w") as f:
+    #     f.write(wallet_data)
 
     # Initialize CDP Agentkit Toolkit and get tools.
     cdp_toolkit = CdpToolkit.from_cdp_agentkit_wrapper(agentkit)
@@ -79,7 +76,6 @@ def initialize_agent():
 def get_chat_response(message):
     global agent_executor, config
 
-    print ("user: " + message)
     final_response = ""
     # Run agent with the user's input in chat mode
     for chunk in agent_executor.stream(
