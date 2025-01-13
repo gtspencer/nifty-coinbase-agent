@@ -1,9 +1,9 @@
 import requests
 
-url = "http://127.0.0.1:5000/uppercase"
+url = "http://127.0.0.1:5000/niftyagent"
 
 payload = {
-    "text": "Can you post a tweet that says Buy Bonk?"
+    "text": "Can you post a tweet that says Buy $Island?"
 }
 
 headers = {
