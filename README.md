@@ -218,7 +218,7 @@ The code at the bottom of the file handles the startup of the agent, and will ru
 
 #### Custom Tools
 
-AgentKit enables easy tool creation with Coinbase's CDP.  Anything that can be done with CDP can be exposed to your agent.  In fact, you can use an LLM to create tools for you!  Coinbase provides a template prompt for LLMs to generate tools [here](https://gist.github.com/murrlincoln/2d413e102844f810cf686fd54f4a996a).
+AgentKit enables easy [tool creation](https://docs.cdp.coinbase.com/agentkit/docs/add-agent-capabilities#using-ai-to-automate-the-process) with Coinbase's CDP.  Anything that can be done with CDP can be exposed to your agent.  In fact, you can use an LLM to create tools for you!  Coinbase provides a template prompt for LLMs to generate tools [here](https://gist.github.com/murrlincoln/2d413e102844f810cf686fd54f4a996a).
 
 Provided in the Nifty x Coinbase repo are 2 example tools, one to [get $ISLAND balance](https://github.com/gtspencer/nifty-coinbase-agent/blob/main/tools/balance_island.py), and one to [transfer $ISLAND](https://github.com/gtspencer/nifty-coinbase-agent/blob/main/tools/transfer_island.py).
 
