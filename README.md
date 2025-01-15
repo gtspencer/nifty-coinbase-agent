@@ -23,11 +23,13 @@ In a new folder, create 2 files: `wallet_data.txt` and `.env`.
 ##### Wallet Data
 `wallet_data.txt` holds the private seed for the agent's wallet.  If you intend to deploy this agent, you will likely need to better secure the wallet private key.  Extensive details are available [here](https://docs.cdp.coinbase.com/mpc-wallet/docs/wallets).
 
-:::note
+:::warning
 
 This `seed` is not your private key; it is the seed with which the private key is derived.  While not the private key itself, it can be used to gain access to the private key.  Protect this like you would your personal private key.
 
 :::
+
+Included in the git repo is a [file](https://github.com/gtspencer/nifty-coinbase-agent/blob/main/create_wallet.py) `create_wallet.py` that will help create the wallet to load into the agent.  *Be sure to set the correct chain, as this is baked into the wallet seed and cannot interact across chains.*
 
 This tutorial also includes the option to store the `wallet_data` in the `.env` file.  This is marginally safer than storing the contents in a plain text file.  Skip to **[the .env section](#env)** for instructions on how to do so.
 
@@ -42,7 +44,7 @@ The format for `wallet_data.txt` is as follows:
 
 You can create a wallet using CDP with the following code:
 ```py
-wallet = Wallet.create()
+wallet = Wallet.create('base-sepolia') # defaults to testnet 'base-sepolia', replace with 'base-mainnet' if you want to interact on Base
 data = wallet.export_data()
 ```
 Where `data` is the value to place in `wallet_data.txt`
@@ -63,6 +65,7 @@ CDP_API_KEY_PRIVATE_KEY=your_cdp_private_key
 OPENAI_API_KEY=your_openai_key # Or XAI_API_KEY if using the NodeJS template
 NETWORK_ID="base-sepolia" # Optional, defaults to base-sepolia
 ```
+CDP AgentKit defaults to Sepolia Base, the testnet of Base.  Change this to `base-mainnet` for Base, or read [here](https://docs.cdp.coinbase.com/cdp-apis/docs/networks) for more info on supported networks.
 
 Optionally, and in leu of the `wallet_data.txt` file, you may place your wallet variables in the `.env` file like so:
 ```
@@ -127,8 +130,6 @@ and set the `wallet_data` variable from the `WALLET_INFO` we load from the envir
 ```py
 wallet_data = WALLET_INFO
 ```
-
-Included in the git repo is a file `create_wallet.py` that will help create the wallet to load into the agent.  Be sure to set the correct chain, as this is baked into the wallet seed and cannot interact across chains.
 
 If you plan on deploying this, remove the following lines:
 ```py
@@ -298,7 +299,7 @@ tools.append(transferIslandTool)
 
 You're done!  Your agent is now capable of transferring $ISLAND.
 
-::: note
+:::note
 
 This implementation can be expanded to any ERC20 token and does not need to be hard-coded to $ISLAND token.  Just redefine the tool inputs to take in an ERC20 contract address, and modify the action handler to take in this value.
 
@@ -351,8 +352,7 @@ Once signed in, navigate to the root directory of your agent code, and type `ver
 
 Its now deployed, but its missing the environment variables.  Log into the Vercel website, and navigate to your project.  In the top bar, hit `Settings`, then in the side bar, high `Environment Variables`.  In the `Create New` section, add your environment variables by copying and pasting each individual key and value pair into the window.  Then click save.
 
-To get the production url, navigate back to your project page, and copy the url under `Domains` (outlined in red).
-![vercel_demo](/img/docs_reference_images/agents/vercel_demo.png)
+To get the production url, navigate back to your project page, and copy the url under `Domains`.
 
 This is the live url!  To test if its working, append your route to the url, in our case `/niftyagent`, and input it into the `url` variable in the `test_api.py` file, and type `py test_api.py` into the terminal.  After a few seconds, your agent's response should be printed to the console!
 
