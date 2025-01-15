@@ -22,3 +22,6 @@ def page_not_found(e):
 
 # starts the agent
 start_agent()
+
+# Uncomment this line if running locally (starts up flask api)
+# app.run()

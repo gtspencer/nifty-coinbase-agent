@@ -1,7 +1,6 @@
 import os
-import sys
-import time
 
+# Import Langchain dependencies
 from langchain_core.messages import HumanMessage
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
@@ -10,11 +9,13 @@ from langgraph.prebuilt import create_react_agent
 # Import CDP Agentkit Langchain Extension.
 from cdp_langchain.agent_toolkits import CdpToolkit
 from cdp_langchain.utils import CdpAgentkitWrapper
+from cdp_langchain.tools import CdpTool
+
+# Import Custom Tools
+from tools.transfer_island import TRANSFER_ISLAND_PROMPT, TransferIslandInput, transfer_island
+from tools.balance_island import ISLAND_BALANCE_PROMPT, IslandBalanceInput, island_balance
 
 from dotenv import load_dotenv
-
-# Configure a file to persist the agent's CDP MPC Wallet Data.
-wallet_data_file = "wallet_data.txt"
 
 load_dotenv()
 
@@ -23,6 +24,7 @@ CDP_API_KEY_PRIVATE_KEY = os.getenv('CDP_API_KEY_PRIVATE_KEY')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 NETWORK_ID = os.getenv('NETWORK_ID')
 WALLET_INFO = os.getenv('WALLET_INFO')
+
 
 def initialize_agent():
     """Initialize the agent with CDP Agentkit."""
@@ -40,6 +42,24 @@ def initialize_agent():
 
     agentkit = CdpAgentkitWrapper(**values)
 
+    # Define the ERC20 transfer tool
+    transferIslandTool = CdpTool(
+        name="transfer_island",
+        description=TRANSFER_ISLAND_PROMPT,
+        cdp_agentkit_wrapper=agentkit,  # Replace with your actual CdpAgentkitWrapper instance
+        args_schema=TransferIslandInput,
+        func=transfer_island,
+    )
+
+    # Define the ISLAND balance tool
+    islandBalanceTool = CdpTool(
+        name="island_balance",
+        description=ISLAND_BALANCE_PROMPT,
+        cdp_agentkit_wrapper=agentkit,  # Replace with your actual CdpAgentkitWrapper instance
+        args_schema=IslandBalanceInput,
+        func=island_balance,
+    )
+
     # disable writing of wallet file
     # persist the agent's CDP MPC Wallet Data.
     # wallet_data = agentkit.export_wallet()
@@ -49,6 +69,8 @@ def initialize_agent():
     # Initialize CDP Agentkit Toolkit and get tools.
     cdp_toolkit = CdpToolkit.from_cdp_agentkit_wrapper(agentkit)
     tools = cdp_toolkit.get_tools()
+    tools.append(transferIslandTool)
+    tools.append(islandBalanceTool)
 
     # Store buffered conversation history in memory.
     memory = MemorySaver()
