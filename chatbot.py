@@ -121,3 +121,27 @@ def start_agent():
     """Start the chatbot agent."""
     global agent_executor, config
     agent_executor, config = initialize_agent()
+
+def handle_world_message(message):
+    text = message["text"]
+
+    if text is "WORLD_TICK":
+        handle_world_message(message["players"])
+    elif text is "WORLD_EVENT":
+        handle_world_event(message)
+
+def handle_world_tick(players):
+    # do something with players
+    print (players)
+
+def handle_world_event(message):
+    event = message["event"]
+    
+    if event is "GAME_COMPLETED":
+        handle_game_complete_event(message["eventData"])
+
+def handle_game_complete_event(eventData):
+    # do something with the event data
+    # can tell the agent a game was completed, and award the winner
+    get_chat_response('The player {eventData[rank][0].username} has won the game!  Next time they chat with you, send them an NFT')
+    print (eventData)
